@@ -1,0 +1,11 @@
+_참고/
+.trash/
+work/
+__pycache__/
+*.pyc
+.env
+.venv/
+*.egg-info/
+frogshorts.local.toml
+local/
+frogshorts.toml

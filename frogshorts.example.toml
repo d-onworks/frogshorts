@@ -1,0 +1,41 @@
+# frogshorts 설정 — 보통은 손댈 필요가 없다. `frogshorts setup` 이 프로젝트 ID 를 골라 frogshorts.toml 에 적어 준다.
+# 손으로 쓰려면 이 파일을 복사해 이름을 frogshorts.toml 로 바꾼다.
+#   맥:     cp frogshorts.example.toml frogshorts.toml
+#   윈도우: copy frogshorts.example.toml frogshorts.toml
+# 점검은 `frogshorts doctor`. ※ 키·토큰 값은 이 파일에 적지 않는다.
+
+[vertex]
+# 영상·더빙·글씨 찾기를 모두 부를 구글 클라우드 프로젝트 ID(이름이 아니라 ID). setup 이 채운다.
+# 얻는 곳: https://console.cloud.google.com → 위쪽 프로젝트 선택 창 → 'ID' 칸.
+# 그 프로젝트에 결제(또는 무료 체험 크레딧)가 연결돼 있어야 한다 — setup 이 Vertex AI API 를 켜 준다.
+project = ""
+# 비워 두면 '내 구글 계정 로그인 파일(ADC)'로 연결한다(수강생은 비워 둔다).
+# 여러 구글 계정을 gcloud 에 로그인해 두고 그중 하나를 지정할 때만 메일을 적는다.
+account = ""
+# 지역·영상 모델 — 보통 그대로 둔다.
+location = "global"
+# model = "latest" 면 쓸 수 있는 Omni 중 가장 최신 버전을 그때그때 고른다(하루 한 번 확인). 특정 버전 고정은 이름을 적는다.
+model = "latest"
+# 추정 단가(1초당 달러) — 0 이면 모델 버전에 맞춰 자동(1.2 ≈ 0.07). 실제 차감은 결제 콘솔에서 확인.
+usd_per_sec = 0
+
+[ledger]
+# 생성할 때마다 한 줄씩 적는 사용 장부(JSONL).
+path = "~/.frogshorts/vertex-ledger.jsonl"
+
+[gemini]
+# 더빙(제미나이 TTS)·글씨 찾기(비전)를 어디로 부를지.
+#   "vertex" — 영상과 같은 프로젝트·같은 로그인(기본, 무료 체험 크레딧 하나로 전부)
+#   "apikey" — AI Studio API 키(https://aistudio.google.com/apikey). 키는 저장소 폴더 .env 에 GEMINI_API_KEY=… 한 줄.
+via = "vertex"
+api_key_env = "GEMINI_API_KEY"
+env_file = ""
+# 더빙 모델·기본 목소리·비전 모델 — 보통 그대로 둔다. 목소리는 제미나이 TTS 기본 목소리 이름(Kore, Puck, Charon …).
+tts_model = "gemini-3.8-flash-tts"
+default_voice = "Kore"
+vision_model = "gemini-3.5-flash"
+
+[whisper]
+# 받아쓰기(whisper.cpp) 실행 파일·모델. 비워 두면 setup 이 깐 곳을 알아서 찾는다.
+bin = "whisper-cli"
+model = ""

@@ -1,0 +1,70 @@
+# 예시 브리프 — 실존하지 않는 가상 가게 "초록연못 빵집". 내 가게 값으로 바꿔 쓴다.
+# plan 이 참고 영상의 틀.yaml 과 합쳐 shorts.yaml 을 만든다. {이름} 은 아래 변수로 바뀐다.
+# 정직성: 가짜 후기·가짜 통계·없는 할인율 금지. 모르는 숫자는 쓰지 않는다. 연락처 같은 값은 누가 봐도 가짜로(000-0000-0000).
+가게: 초록연못 빵집
+
+변수:
+  상품: 우유 식빵
+  상품영문: a tall, soft milk loaf bread with a golden-brown top, sliced to show a fluffy white crumb
+  가격: 4,500원
+  배너위: 초록연못 빵집 오늘의 빵
+
+# 화면 표기 → 읽는 소리(자막은 왼쪽, 더빙은 오른쪽). 가게 이름을 TTS 가 틀리게 읽으면 여기에 적는다.
+발음:
+  초록연못: 초록 연못
+
+# 더빙 뒤 받아쓰기로 꼭 들렸는지 확인할 말(안 들리면 그 문장만 다시 뽑는다)
+꼭읽기: [초록연못, 식빵]
+
+목소리:
+  엔진: gemini
+  보이스: Kore                      # 제미나이 기본 목소리. 한국어 목소리 목록은 README 참고
+  말투: 동네 빵집 사장님이 단골에게 오늘 나온 빵을 소개하듯 밝고 다정하게
+  빠르기: 보통                      # 느림 · 보통 · 빠름 — 더빙 전 길이 어림에 쓴다
+
+# 대사 — 숫자는 한글로 적으면 받아쓰기와 잘 맞는다. '|' 는 자막을 끊고 싶은 자리.
+대사:
+  - "오늘 아침 갓 구운 {상품}이에요. | 초록연못 빵집에서 제일 먼저 나가는 빵이죠."
+  - "결이 이렇게 쭉쭉 찢어지고요, 우유를 넉넉히 넣어서 촉촉해요."
+  - "토스트로 구워 드셔도 좋고, 그냥 뜯어 드셔도 맛있어요."
+  - "한 덩이에 사천오백 원, 오후 두 시면 다 나가니까 일찍 오세요."
+
+컷:
+  - id: A
+    시작: 대사1
+    길이: 자동                      # 더빙 길이에 맞춰 3~10초로 생성(돈 아끼기)
+    장면: >-
+      On a wooden bakery counter, a pair of hands lifts a freshly baked {상품영문} out of its tin.
+      Soft steam rises. The camera slowly pushes in toward the golden crust.
+  - id: B
+    시작: 대사2:결이
+    길이: 자동
+    참조: A@0                       # 앞 컷 첫 화면을 참조해 같은 가게·같은 빵으로
+    장면: >-
+      Continue this exact scene from the reference image: the same hands gently tear the loaf open,
+      showing long stretchy strands of white crumb. Close-up, steady camera.
+  - id: C
+    시작: 대사4
+    길이: 자동
+    참조: A@0
+    장면: >-
+      The same bakery from the reference image, now a wider view of a shelf with several loaves of the same
+      bread on wooden boards. Warm morning light through the window. Slow sideways camera move.
+
+부품:
+  - 종류: 배너
+    작은글: "{배너위}"
+    큰글: "{상품}"
+  - 종류: 자막
+  - 종류: 배지
+    시작: 대사4:사천오백
+    글: "{상품} {가격}"
+  - 종류: 엔딩
+    시작: 대사4:일찍
+    글: "{가게}"
+    작은글: 가상 가게 예시 영상
+  - 종류: AI표시
+
+마감:
+  해상도: 720p                      # 연습은 720p 로 싸게, 최종만 1080p
+  글씨흐림: 자동                    # 생성 화면 속 가짜 글씨를 찾아 흐린다(제미나이 비전, 몇 원)
