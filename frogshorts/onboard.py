@@ -211,6 +211,9 @@ def step_project(yes: bool, given: str | None) -> str | None:
         if len(ps) == 1 or yes or not sys.stdin.isatty():
             cur = ps[0]["projectId"]
             print(f"   프로젝트: {ps[0].get('name', '')} ({cur})")
+            if len(ps) > 1:                  # 묻지 않고 첫 번째를 골랐다 — 다른 걸 쓰는 법을 같이 보여 준다
+                print(f"   (프로젝트가 {len(ps)}개라 첫 번째로 했다: " + ", ".join(p["projectId"] for p in ps)
+                      + " — 다른 걸 쓰려면 frogshorts setup --project <ID>)")
         else:
             for i, p in enumerate(ps, 1):
                 print(f"   {i}. {p.get('name', '')}  ({p['projectId']})")
@@ -322,8 +325,8 @@ DONE = """
 
 
 def main(yes: bool = False, project: str | None = None, skip_tools: bool = False) -> int:
-    try:
-        sys.stdout.reconfigure(errors="replace")
+    try:                                     # 클로드 같은 도우미가 돌릴 때도 한 줄씩 바로 보이게
+        sys.stdout.reconfigure(errors="replace", line_buffering=True)
     except (AttributeError, ValueError):
         pass
     print(f"frogshorts 준비 마법사 — {install.os_name()}")
