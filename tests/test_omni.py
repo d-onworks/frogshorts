@@ -55,3 +55,13 @@ def test_설정에_이름을_적으면_그_버전_고정_길이도_따라간다(
     monkeypatch.setattr(omni, "_list_names", lambda: ["gemini-omni-1.2-flash"])
     assert video.MAX_SEC == 15
     assert video.build_body("x", [], "720p", "9:16", 15)["response_format"][0]["duration"] == "15s"
+
+
+def test_non_omni_model_refused(monkeypatch):
+    """Veo 등 Omni 가 아닌 모델은 설정에 적어도 쓰지 않는다(폴백 금지)."""
+    from frogshorts import config
+    from frogshorts.providers import video
+    from frogshorts.util import FrogError
+    monkeypatch.setattr(config, "get", lambda sec, key: "veo-3.1-generate-001" if key == "model" else None)
+    with pytest.raises(FrogError, match="Omni 만"):
+        video._model()

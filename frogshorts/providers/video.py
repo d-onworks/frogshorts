@@ -3,7 +3,7 @@
 과금 계정·프로젝트·장부 경로는 코드가 아니라 설정 파일(frogshorts.toml 의 [vertex]·[ledger])에서 읽는다.
 인증은 gauth 한 곳 — 기본은 내 구글 계정 ADC 로그인 파일, 설정 [vertex] account 가 있으면
 `gcloud auth print-access-token --account=<그 계정>`(gcloud 기본 계정은 절대 바꾸지 않는다).
-Veo 자동 전환은 기본 꺼짐(실패하면 보고).
+Veo 등 다른 모델로 넘어가는 길은 없다 — 실패·큐 막힘이면 멈추고 보고한다(대표 지시 2026-11-10). 설정에 Omni 가 아닌 모델을 적어도 거부.
 설정값은 가져올(import) 때가 아니라 쓰는 순간에 읽는다 — 설정이 비어도 계획 출력(dry-run)·테스트는 돈다.
 
 요청 형식 두 가지:
@@ -35,7 +35,11 @@ _MIME = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".web
 
 def _model() -> str:
     m = str(config.get("vertex", "model") or "latest").strip()
-    return omni.latest() if m.lower() == "latest" else m
+    m = omni.latest() if m.lower() == "latest" else m
+    if not omni.version(m):
+        raise FrogError(f"[vertex] model = {m!r} — frogshorts 는 Vertex AI Omni 만 쓴다(Veo 등 다른 모델 금지). "
+                        "\"latest\" 또는 gemini-omni-… 이름을 적어라")
+    return m
 
 
 def _max_sec() -> int:
